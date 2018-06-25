@@ -427,14 +427,20 @@
     var Validator = function(){     //验证类
         this.cache = [] // 保存校验规则
     }
-    Validator.prototype.add = function( dom, rule, errorMsg ){
-        var ary = rule.split( ':' ) // 把strategy 和参数分开
-        this.cache.push(function(){ // 把校验的步骤用空函数包装起来，并且放入cache
-            var strategy = ary.shift() // 用户挑选的strategy
-            ary.unshift( dom.value ) // 把input 的value 添加进参数列表
-            ary.push( errorMsg ) // 把errorMsg 添加进参数列表
-            return strategies[ strategy ].apply( dom, ary )
-        })
+    Validator.prototype.add = function( dom, rules){
+        var self = this
+        for(var i = 0, rule; rule = rules[i++];){
+            (function (rule) {
+                var strategyAry = rule.strategy.split( ':' )    // 把strategy 和参数分开
+                var errorMsg = rule.errorMsg
+                self.cache.push(function () {           // 把校验的步骤用空函数包装起来，并且放入cache
+                    var strategy = strategyAry.shift()  // 用户挑选的strategy
+                    strategyAry.unshift( dom.value )    // 把input 的value 添加进参数列表
+                    strategyAry.push( errorMsg )        // 把errorMsg 添加进参数列表
+                    return strategies[ strategy ].apply( dom, strategyAry )
+                })
+            })(rule)
+        }
     }
     Validator.prototype.start = function(){
         for ( var i = 0, validatorFunc; validatorFunc = this.cache[ i++ ]; ){
@@ -448,9 +454,21 @@
     var validataFunc = function(){
         var validator = new Validator() // 创建一个validator 对象
         /***************添加一些校验规则****************/
-        validator.add( registerForm.userName, 'isNonEmpty', '用户名不能为空' )
-        validator.add( registerForm.password, 'minLength:6', '密码长度不能少于6 位' )
-        validator.add( registerForm.phoneNumber, 'isMobile', '手机号码格式不正确' )
+        validator.add( registerForm.userName, [{
+            strategy: 'isNonEmpty',
+            errorMsg: '用户名不能为空'
+        }, {
+            strategy: 'minLength:6',
+            errorMsg: '用户名长度不能小于10 位'
+        }])
+        validator.add( registerForm.password, [{
+            strategy: 'minLength:6',
+            errorMsg: '密码长度不能小于6 位'
+        }])
+        validator.add( registerForm.phoneNumber, [{
+            strategy: 'isMobile',
+            errorMsg: '手机号码格式不正确'
+        }])
         var errorMsg = validator.start() // 获得校验结果
         return errorMsg // 返回校验结果
     }
@@ -467,5 +485,48 @@
      * 使用策略模式重构代码之后，我们仅仅通过“配置”的方式就可以完成一个表单的校验，
      * 这些校验规则也可以复用在程序的任何地方，还能作为插件的形式，方便地被移植到其他项目中。
      * */
+
+
+
+
+    /**
+     * --------------------------------------代理模式---------------------------------------
+     * 代理模式分两种：保护代理和虚拟代理，保护代理用于控制不同权限的对象对目标对象的访问，在JS中不太好
+     * 实现，因为我们无法判断谁访问了对象。虚拟代理是将一些开销较大的操作方在代理对象里执行，这行就可以
+     * 在真正需要的时候执行。
+     * */
+
+    //虚拟代理实现突破预加载，通过loading的方式
+
+    var myImage = (function () {
+        var imgNode = document.createElement('img')
+        document.body.appendChild(imgNode)
+        return{
+            setSrc:function (src) {
+                imgNode.src = src
+            }
+        }
+    })()
+
+    var proxyImage = (function () {
+        var img = new Image
+        img.onload = function () {
+            myImage.setSre(this.src)
+        }
+        return {
+            setSrc:function () {
+                myImage.setSrc('本地图片')
+                img.src = src
+            }
+        }
+    })
+
+    proxyImage.setSrc('远程图片')
+
+
+
+
+
+
 
 })
