@@ -492,7 +492,7 @@
     /**
      * --------------------------------------代理模式---------------------------------------
      * 代理模式分两种：保护代理和虚拟代理，保护代理用于控制不同权限的对象对目标对象的访问，在JS中不太好
-     * 实现，因为我们无法判断谁访问了对象。虚拟代理是将一些开销较大的操作方在代理对象里执行，这行就可以
+     * 实现，因为我们无法判断谁访问了对象。虚拟代理是将一些开销较大的操作方在代理对象里执行，这行代码就可以
      * 在真正需要的时候执行。
      * */
 
@@ -521,7 +521,185 @@
         }
     })
 
-    proxyImage.setSrc('远程图片')
+    // proxyImage.setSrc('远程图片')
+
+
+    /**
+     * -----------------------------------------缓存代理----------------------------------------
+     * 缓存代理可以为一些开销大的运算结果提供暂时的存储，在下次运算时，如果传递进来的参数跟之前一致，则可以直接返回前面
+     * 存储的运算结果。
+     * 常见的缓存代理实现如 分页。
+     * */
+
+
+
+
+
+
+    /**
+     * -------------------------------------发布订阅模式---------------------------------------
+     * 通过事件回调的方式做到模块或组件质检的通信
+     * */
+    var eventBus = {
+        map:{},             //事件缓存初
+        on:function (eventName,callback) {      //订阅事件
+            this.map[eventName] = callback
+        },
+        //发布事件
+        tigger:function () {
+            var shift = Arry.prototype.shift.call(arguments)
+            if(!this.map[shift]){
+                throw new Error('没有此事件')
+            }
+            this.map[shift](arguments)
+            return this
+        }
+    }
+
+
+    /**
+     * -------------------------------------命令模式---------------------------------------
+     * 应用场景：
+     * 有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请
+     * 求的操作是什么，此时希望用一种松耦合的方式来设计软件，使得请求发送者和请求接
+     * 收者能够消除彼此之间的耦合关系。
+     * */
+
+    var Ryu = {
+        attack:function () {
+            console.log('攻击')
+        },
+        defense:function () {
+            console.log('防御')
+        },
+        jump:function () {
+            console.log('跳跃')
+        },
+        crouch:function () {
+            console.log('蹲下')
+        }
+    }
+
+    var makeCommand = function (receiver,state) {       //创建命令
+        return function () {
+            receiver[state]()
+        }
+    }
+
+    var commands = {
+        "119": "jump", // W
+        "115": "crouch", // S
+        "97": "defense", // A
+        "100": "attack" // D
+    }
+
+    var commandStack = []       //保存命令的堆栈
+
+    document.onkeypress = function (ev) {
+        var keyCode = ev.keyCode,
+            command = makeCommand(Ryu,commands[keyCode])
+        if(command){
+            command()       //执行命令
+            commandStack.push(command)          // 将执行过的命令保存进堆栈
+        }
+    }
+
+    document.getElementById('replay').onclick = function () {
+        var command
+        while (command = commandStack.shift()){
+            command()
+        }
+    }
+
+    /**
+     * ---------------------------------命令队列---------------------------
+     * 在前一个命令还在执行中时，将后续触发的命令都丢到命令队列中，然后在当前命令执行完毕
+     * 之后触发队列中的命令。当面命令的触发方式可以用回调函数或者事件订阅模式
+     *
+     * */
+
+    /**
+     * ------------------------------宏命令-------------------------------
+     * 可以一次执行一批命令
+     * */
+
+    var closeDoorCommand = {
+        execute:function () {
+            console.log('关门')
+        }
+    }
+
+    var openPcCommand = {
+        execute:function () {
+            console.log('打开电脑')
+        }
+    }
+
+    var openQQCommand = {
+        execute:function () {
+            console.log('登录QQ')
+        }
+    }
+
+    var MacroCommand = function () {
+        return {
+            cmmandsList:[],
+            add:function (command) {
+                this.cmmandsList.push(command)
+            },
+            execute:function () {
+                for(var i = 0,command;command = this.cmmandsList[i++]){
+                    command.execute()
+                }
+            }
+        }
+    }
+
+    var macroCommand = MacroCommand()
+    macroCommand.add(closeDoorCommand)
+    macroCommand.add(openPcCommand)
+    macroCommand.add(openQQCommand)
+    macroCommand.execute()
+
+
+
+    /**
+     * --------------------------------------组合模式--------------------------------------
+     * 将负责多个业务逻辑的对象组合成一个大的对象，
+     * */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
