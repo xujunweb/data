@@ -4,8 +4,6 @@
 // const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const UglifyJsPlugin = require('uglify-js-plugin')
 module.exports = {
     devtool:'eval-source-map',
     entry:__dirname + '/app/main.js',
@@ -29,33 +27,31 @@ module.exports = {
             },
             {
                 test:/\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: [{
+                use: [
+                    {
+                        loader: "style-loader"
+                    }, {
                         loader: "css-loader",
                         options: {
                             modules: true
                         }
                     }, {
                         loader: "postcss-loader"
-                    }],
-                })
+                    }
+                ]
             },
-            // {
-            //     test:/\.less$/,
-            //     use:{
-            //         loader:"less-loader"
-            //     }
-            // }
+            {
+                test:/\.less$/,
+                use:{
+                    loader:"less-loader"
+                }
+            }
         ]
     },
     plugins:[
         new HtmlWebpackPlugin({
             template: __dirname + '/app/index.tmpl.html'
         }),
-        new webpack.HotModuleReplacementPlugin(),    //热加载插件
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new UglifyJsPlugin(),
-        new ExtractTextPlugin("styles.css")
+        new webpack.HotModuleReplacementPlugin()    //热加载插件
     ]
 }
