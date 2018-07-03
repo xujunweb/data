@@ -1,0 +1,22 @@
+{
+  "name": "xujun",
+  "version": "1.0.0",
+  "description": "test2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --mode production",
+    "build": "webpack --config config/webpack.dev.js",
+    "server": "webpack-dev-server --config config/webpack.dev.js"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "xujun",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  }
+}
