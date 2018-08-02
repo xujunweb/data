@@ -103,57 +103,7 @@ $.when(w).then(function(){
 
 
 
-### vdom是什么？为何会存在vdom？
 
-vdom(虚拟dom)
-用JS模拟DOM结构
-DOM变化的对比，放在JS层来做
-DOM操作比较耗性能
-提高重绘性能
-
-
-
-
-
-
-
-### vdom如何应用，核心API是什么？
-
-核心API：h函数，patch函数
-
-
-
-
-
-
-
-### 介绍一下diff算法
-
-
-
-
-
-
-### 什么是MVC模式，什么是MVVM
-
-MVC(模块，视图，控制器)，MVVM(模块,数据(model)，视图(view)，视图模型(viewModel))
-视图模型(viewModel): 视图和模型的一个桥梁,model可以通过数据绑定的方式影响view,view可以通过事件绑定的方式影响model
-
-
-
-### vue三要素,响应式，模板引擎，渲染
-
-响应式：vue如何监听到data的每个属性变化？
-vue是通过Object.defineProperty方法来实现监听data的属性变化的
-
-
-
-模板引擎：vue的模板如何被解析，指令如何处理？
-
-
-
-
-渲染：vue的模板如何被渲染成html？以及渲染过程
 
 
 
