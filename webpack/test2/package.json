@@ -40,7 +40,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "es6-promise": "^4.2.4",
     "iview": "^2.14.3",
