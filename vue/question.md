@@ -83,6 +83,8 @@ var vm = new Vue({
 
 
 
+### Vue的一些性能优化
+
 
 
 
